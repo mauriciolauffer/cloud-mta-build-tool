@@ -1,6 +1,7 @@
 package artifacts
 
 import (
+	"fmt"
 	"os"
 	"strings"
 	"text/template"
@@ -50,7 +51,7 @@ var _ = Describe("manifest", func() {
 			mtaObj, err := loc.ParseFile()
 			Ω(err).Should(Succeed())
 			err = setManifestDesc(&loc, &loc, &loc, true, mtaObj.Modules, []*mta.Resource{}, "cf")
-			checkError(err, conttype.ContentTypeUndefinedMsg, ".js")
+			checkError(err, fmt.Sprintf(conttype.ContentTypeUndefinedMsg, ".js"))
 		})
 		It("Sanity - with configuration provided", func() {
 			// no_source module (with no-source build parameter) is not referenced in the manifest
@@ -156,7 +157,7 @@ var _ = Describe("manifest", func() {
 			mtaObj, err := loc.ParseFile()
 			Ω(err).Should(Succeed())
 			err = setManifestDesc(&loc, &loc, &loc, true, mtaObj.Modules, mtaObj.Resources, "cf")
-			checkError(err, wrongArtifactPathMsg, "java-hello-world")
+			checkError(err, fmt.Sprintf(wrongArtifactPathMsg, "java-hello-world"))
 		})
 		It("With missing resource", func() {
 			createDirInTmpFolder("assembly-sample", "META-INF")
@@ -169,7 +170,7 @@ var _ = Describe("manifest", func() {
 			mtaObj, err := loc.ParseFile()
 			Ω(err).Should(Succeed())
 			err = setManifestDesc(&loc, &loc, &loc, true, mtaObj.Modules, mtaObj.Resources, "cf")
-			checkError(err, unknownResourceContentTypeMsg, "java-uaa")
+			checkError(err, fmt.Sprintf(unknownResourceContentTypeMsg, "java-uaa"))
 
 		})
 		It("required resource with path fails when the path doesn't exist", func() {
@@ -181,7 +182,7 @@ var _ = Describe("manifest", func() {
 			Ω(err).Should(Succeed())
 			err = setManifestDesc(&loc, &loc, &loc, true, mtaObj.Modules, mtaObj.Resources, "cf")
 			// This fails because the config-site-host.json file (from the path of the required java-site-host) doesn't exist
-			checkError(err, requiredEntriesProblemMsg, "java-hello-world-backend")
+			checkError(err, fmt.Sprintf(requiredEntriesProblemMsg, "java-hello-world-backend"))
 		})
 		When("build-artifact-name is defined in the build parameters", func() {
 			It("should take the defined build artifact name when the build artifact exists", func() {
@@ -234,7 +235,7 @@ var _ = Describe("manifest", func() {
 				mtaObj, err := loc.ParseFile()
 				Ω(err).Should(Succeed())
 				err = setManifestDesc(&loc, &loc, &loc, false, mtaObj.Modules, []*mta.Resource{}, "cf")
-				checkError(err, buildops.WrongBuildArtifactNameMsg, "1", "node-js")
+				checkError(err, fmt.Sprintf(buildops.WrongBuildArtifactNameMsg, "1", "node-js"))
 			})
 			It("should fail when data.zip exists instead of the build artifact name", func() {
 				createDirInTmpFolder("mta", "node-js")
@@ -243,7 +244,7 @@ var _ = Describe("manifest", func() {
 				mtaObj, err := loc.ParseFile()
 				Ω(err).Should(Succeed())
 				err = setManifestDesc(&loc, &loc, &loc, false, mtaObj.Modules, []*mta.Resource{}, "cf")
-				checkError(err, wrongArtifactPathMsg, "node-js")
+				checkError(err, fmt.Sprintf(wrongArtifactPathMsg, "node-js"))
 			})
 			It("should fail when the build artifact doesn't exist in the module folder", func() {
 				createDirInTmpFolder("mta", "node-js")
@@ -251,14 +252,14 @@ var _ = Describe("manifest", func() {
 				mtaObj, err := loc.ParseFile()
 				Ω(err).Should(Succeed())
 				err = setManifestDesc(&loc, &loc, &loc, false, mtaObj.Modules, []*mta.Resource{}, "cf")
-				checkError(err, wrongArtifactPathMsg, "node-js")
+				checkError(err, fmt.Sprintf(wrongArtifactPathMsg, "node-js"))
 			})
 			It("should fail when the module folder doesn't exist", func() {
 				loc := dir.Loc{SourcePath: getTestPath("mta"), TargetPath: getResultPath(), MtaFilename: "mtaBuildArtifact.yaml"}
 				mtaObj, err := loc.ParseFile()
 				Ω(err).Should(Succeed())
 				err = setManifestDesc(&loc, &loc, &loc, false, mtaObj.Modules, []*mta.Resource{}, "cf")
-				checkError(err, wrongArtifactPathMsg, "node-js")
+				checkError(err, fmt.Sprintf(wrongArtifactPathMsg, "node-js"))
 			})
 		})
 	})

@@ -1,7 +1,6 @@
 package artifacts
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -69,11 +68,7 @@ func getFullPathInTmpFolder(projectName string, path ...string) string {
 	return getTestPath(pathWithResultFolder...)
 }
 
-func checkError(err error, msg string, args ...interface{}) {
+func checkError(err error, msg string) {
 	Ω(err).Should(HaveOccurred())
-	if len(args) == 0 {
-		Ω(err.Error()).Should(ContainSubstring(msg))
-	} else {
-		Ω(err.Error()).Should(ContainSubstring(fmt.Sprintf(msg, args...)))
-	}
+	Ω(err.Error()).Should(ContainSubstring(msg))
 }

@@ -26,13 +26,13 @@ var _ = Describe("Project", func() {
 		})
 		It("wrong phase", func() {
 			err := ExecuteProjectBuild(getTestPath("mta"), "", "", "dev", nil, "wrong phase", os.Getwd)
-			checkError(err, UnsupportedPhaseMsg, "wrong phase")
+			checkError(err, fmt.Sprintf(UnsupportedPhaseMsg, "wrong phase"))
 		})
 		It("wrong location", func() {
 			err := ExecuteProjectBuild(getTestPath("mta"), "", "", "xx", nil, "pre", func() (string, error) {
 				return "", fmt.Errorf("error")
 			})
-			checkError(err, dir.InvalidDescMsg, "xx")
+			checkError(err, fmt.Sprintf(dir.InvalidDescMsg, "xx"))
 		})
 		It("mta.yaml not found", func() {
 			err := ExecuteProjectBuild(getTestPath("mta1"), "", "", "dev", nil, "pre", os.Getwd)
@@ -198,13 +198,13 @@ builders:
 		It("Fails on builder with timeout, when timeout is reached", func() {
 			builder := mta.ProjectBuilder{Builder: "custom", Commands: []string{`sh -c 'sleep 10'`}, Timeout: "2s"}
 			err := execProjectBuilder([]mta.ProjectBuilder{builder}, "post")
-			checkError(err, exec.ExecTimeoutMsg, "2s")
+			checkError(err, fmt.Sprintf(exec.ExecTimeoutMsg, "2s"))
 		})
 
 		It("Fails on builder with invalid custom command", func() {
 			builder := mta.ProjectBuilder{Builder: "custom", Commands: []string{`sh -c 'sleep 10`}}
 			err := execProjectBuilder([]mta.ProjectBuilder{builder}, "post")
-			checkError(err, commands.BadCommandMsg, `sh -c 'sleep 10`)
+			checkError(err, fmt.Sprintf(commands.BadCommandMsg, `sh -c 'sleep 10`))
 		})
 
 		It("Fails on command execution", func() {

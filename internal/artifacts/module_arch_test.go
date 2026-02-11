@@ -715,7 +715,7 @@ module-types:
 
 				ep := dir.Loc{SourcePath: getTestPath("mta"), TargetPath: getResultPath()}
 				err := buildModule(&ep, &ep, "node-js", "cf", true, true, map[string]string{})
-				checkError(err, commands.BadCommandMsg, `sh -c "sleep 1`)
+			checkError(err, fmt.Sprintf(commands.BadCommandMsg, `sh -c "sleep 1`))
 			})
 
 			It("Target folder exists as a file - dev", func() {
@@ -745,12 +745,12 @@ module-types:
 				It("fails when timeout is exceeded", func() {
 					ep := dir.Loc{SourcePath: getTestPath("mta"), TargetPath: getResultPath(), MtaFilename: "mta_with_timeout.yaml"}
 					err := buildModule(&ep, &ep, "m1", "cf", true, true, map[string]string{})
-					checkError(err, exec.ExecTimeoutMsg, "2s")
+					checkError(err, fmt.Sprintf(exec.ExecTimeoutMsg, "2s"))
 				})
 				It("fails when timeout is not a string", func() {
 					ep := dir.Loc{SourcePath: getTestPath("mta"), TargetPath: getResultPath(), MtaFilename: "mta_with_timeout.yaml"}
 					err := buildModule(&ep, &ep, "m3", "cf", true, true, map[string]string{})
-					checkError(err, exec.ExecInvalidTimeoutMsg, "1")
+					checkError(err, fmt.Sprintf(exec.ExecInvalidTimeoutMsg, "1"))
 				})
 			})
 		})
@@ -843,7 +843,7 @@ module-types:
 			mtaBytes, _ := yaml.Marshal(mta)
 			Ω(ioutil.WriteFile(filepath.Join(source, defaultDeploymentDescriptorName), mtaBytes, os.ModePerm)).Should(Succeed())
 			err := CopyMtaContent(source, "", source, nil, false, os.Getwd)
-			checkError(err, pathNotExistsMsg, "not-existing-content")
+			checkError(err, fmt.Sprintf(pathNotExistsMsg, "not-existing-content"))
 			info, err := os.Stat(source)
 			Ω(err).Should(Succeed())
 			Ω(dirContainsAllElements(source, map[string]bool{info.Name() + dir.TempFolderSuffix: true}, false)).Should(Equal(false))
@@ -856,7 +856,7 @@ module-types:
 			mtaBytes, _ := yaml.Marshal(mta)
 			Ω(ioutil.WriteFile(filepath.Join(source, defaultDeploymentDescriptorName), mtaBytes, os.ModePerm)).Should(Succeed())
 			err := CopyMtaContent(source, "", source, nil, false, os.Getwd)
-			checkError(err, pathNotExistsMsg, "not-existing-content")
+			checkError(err, fmt.Sprintf(pathNotExistsMsg, "not-existing-content"))
 			info, err := os.Stat(source)
 			Ω(err).Should(Succeed())
 			Ω(dirContainsAllElements(source, map[string]bool{info.Name() + dir.TempFolderSuffix: true}, false)).Should(Equal(false))
@@ -909,12 +909,12 @@ module-types:
 	Describe("copyModuleArchiveToResultDir", func() {
 		It("target folder is file", func() {
 			err := copyModuleArchiveToResultDir(getTestPath("assembly", "data.jar"), getTestPath("assembly", "file", "file"), "m1")
-			checkError(err, dir.FolderCreationFailedMsg, getTestPath("assembly", "file"))
+			checkError(err, fmt.Sprintf(dir.FolderCreationFailedMsg, getTestPath("assembly", "file")))
 		})
 
 		It("target is existing folder", func() {
 			err := copyModuleArchiveToResultDir(getTestPath("assembly", "file"), getTestPath("assembly", "folder3"), "m1")
-			checkError(err, packFailedOnCopyMsg, "m1", getTestPath("assembly", "file"), getTestPath("assembly", "folder3"))
+			checkError(err, fmt.Sprintf(packFailedOnCopyMsg, "m1", getTestPath("assembly", "file"), getTestPath("assembly", "folder3")))
 		})
 	})
 

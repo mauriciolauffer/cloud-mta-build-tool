@@ -35,7 +35,7 @@ var _ = Describe("Meta", func() {
 			createDirInTmpFolder("mtahtml5")
 			createFileInTmpFolder("mtahtml5", "META-INF")
 			err := ExecuteGenMeta(getTestPath("mtahtml5"), "", getResultPath(), "dev", nil, "CF", os.Getwd)
-			checkError(err, dir.FolderCreationFailedMsg, getFullPathInTmpFolder("mtahtml5", "META-INF"))
+			checkError(err, fmt.Sprintf(dir.FolderCreationFailedMsg, getFullPathInTmpFolder("mtahtml5", "META-INF")))
 		})
 
 		It("Wrong location - fails on Working directory get", func() {
@@ -48,7 +48,7 @@ var _ = Describe("Meta", func() {
 			createDirInTmpFolder("mtahtml5", "ui5app2")
 			createDirInTmpFolder("mtahtml5", "testapp")
 			err := ExecuteGenMeta(getTestPath("mtahtml5"), "", getResultPath(), "dev", nil, "xx", os.Getwd)
-			checkError(err, invalidPlatformMsg, "xx")
+			checkError(err, fmt.Sprintf(invalidPlatformMsg, "xx"))
 		})
 		It("generateMeta fails on wrong source path - parse mta fails", func() {
 			err := ExecuteGenMeta(getTestPath("mtahtml6"), "", getResultPath(), "dev", nil, "cf", os.Getwd)
@@ -222,14 +222,14 @@ cli_version:["x"]
 			createFileInGivenPath(resultFilePath)
 
 			err := ExecuteMerge(getTestPath("mta_with_ext"), "", getResultPath(), []string{"cf-mtaext.mtaext"}, resultFileName, os.Getwd)
-			checkError(err, mergeFailedOnFileCreationMsg, resultFilePath)
+			checkError(err, fmt.Sprintf(mergeFailedOnFileCreationMsg, resultFilePath))
 		})
 		It("Fails when the result directory is a file", func() {
 			Ω(dir.CreateDirIfNotExist(filepath.Dir(getResultPath()))).Should(Succeed())
 			createFileInGivenPath(getResultPath())
 
 			err := ExecuteMerge(getTestPath("mta_with_ext"), "", getResultPath(), []string{"cf-mtaext.mtaext"}, resultFileName, os.Getwd)
-			checkError(err, dir.FolderCreationFailedMsg, getResultPath())
+			checkError(err, fmt.Sprintf(dir.FolderCreationFailedMsg, getResultPath()))
 		})
 		It("Fails when the mtaext file doesn't exist", func() {
 			err := ExecuteMerge(getTestPath("mta_with_ext"), "", getResultPath(), []string{"invalid.yaml"}, resultFileName, os.Getwd)
